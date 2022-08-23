@@ -50,7 +50,31 @@ class Board
     p g_field
   end
 
-  def build_tree(node, final, arr = []) # Coordinate arrays
+  def build_tree(node, final, arr = [], i = 0) # Coordinate arrays
+    #return p "imax #{arr}" if i == 4
+    puts i
+    #return if arr.last == final
+    arr << node
+    return p "#{arr} found" if node == final
+
+    node_row = node[0]
+    node_column = node[1]
+    p node = self.board[node_row][node_column]
+
+    final_row = final[0]
+    final_column = final[1]
+    final = self.board[final_row][final_column]
+
+    build_tree([node_row + 1, node_column + 2], [final_row, final_column], arr, i + 1) unless self.board[node_row + 1][node_column + 2].nil?
+    build_tree([node_row + 2, node_column + 1], [final_row, final_column], arr, i + 1) unless self.board[node_row + 2][node_column + 1].nil?
+    puts "\n\n"
+
+  end
+
+  def build_tree2(node, final, arr = [], i = 0) # Coordinate arrays
+    return p "imax #{arr}" if i == 4
+    puts i
+    #return if arr.last == final
     arr << node
 
     node_row = node[0]
@@ -59,22 +83,23 @@ class Board
 
     final_row = final[0]
     final_column = final[1]
-    p final = self.board[final_row][final_column]
-    return p arr if node == final
+    final = self.board[final_row][final_column]
+    return p "#{arr} found" if node == final
 
-    node.n_1 = build_tree([node_row + 1, node_column + 2], [final_row, final_column], arr) unless self.board[node_row + 1][node_column + 2].nil?
+    build_tree([node_row + 2, node_column + 1], [final_row, final_column], arr, i + 1) unless self.board[node_row + 2][node_column + 1].nil?
+    build_tree([node_row + 1, node_column + 2], [final_row, final_column], arr, i + 1) unless self.board[node_row + 1][node_column + 2].nil?
     puts "\n\n"
 
   end
 end
 
 class Field
-  attr_accessor :number, :holds_knight, :n_1
+  attr_accessor :number, :holds_knight, :n_1, :n_2
   def initialize(number = nil)
     @number = number
-    @holds_knight = false
 
     @n_1 = nil
+    @n_2 = nil
   end
 end
 
@@ -82,3 +107,4 @@ board = Board.new
 #board.knight_moves([0, 0], [1, 1])
 board.print_board
 board.build_tree([0, 0], [2, 4])
+#board.build_tree[[0, 0], [4, 2]]

@@ -5,10 +5,10 @@ class Board
     i = 0
     while i < 64
       if i + 1 > 9
-        @board << Field.new("#{i}")
+        @board << Field.new(i)
         i += 1
       else
-        @board << Field.new("#{i}")
+        @board << Field.new(i)
         i += 1
       end
     end
@@ -44,18 +44,32 @@ class Board
 
     puts start_field.number
     puts goal_field.number
+
+    # build_tree(start_field, goal_field)
+  end
+
+  def build_tree(root, final = nil) # Fieldnodes - number method can be called upon to retrieve index
+    n = root.number
+    return if root == final
+    root.n_1 = self.board[n + 10] unless n + 6 > 63
+    root.n_1.holds_knight = true
+    p root.n_1
+    #puts root.n_1.number
   end
 end
 
 class Field
-  attr_accessor :number, :holds_knight
+  attr_accessor :number, :holds_knight, :n_1
   def initialize(number)
     @number = number
     @holds_knight = false
+
+    @n_1 = nil
   end
 end
 
 board = Board.new
 board.print_board
 
-board.knight_moves([0, 0], [1, 1])
+#board.knight_moves([0, 0], [1, 1])
+board.build_tree(board.board[0])
