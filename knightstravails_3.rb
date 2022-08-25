@@ -44,7 +44,7 @@ end
 ###
 ### List of buid_tree functions ###
 ###
-def build_tree(start, final, tracker = [])
+def build_tree(start, final, tracker = [], d = 0)
   p "start: #{start}"
   tracker << start
   node = Node.new(start)
@@ -54,10 +54,10 @@ def build_tree(start, final, tracker = [])
   return p "LEGAL TARGET FOUND #{tracker} / steps needed: #{tracker.length - 1}" if legal_moves.include?(final)
 
   tracker.each { |visited| legal_moves.delete(visited) } unless tracker.empty?
-
+  legal_moves = legal_moves.reverse if d = 1
   if legal_moves.empty?
     p 'out of legal moves'
-    return
+    node.c_1 = build_tree(tracker[1], final, tracker = [], d = 1)
   else
     node.c_1 = build_tree(legal_moves[0], final, tracker) unless legal_moves[0].nil?
   end
