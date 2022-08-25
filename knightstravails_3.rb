@@ -44,22 +44,27 @@ end
 ###
 ### List of buid_tree functions ###
 ###
-def build_tree(start, final, tracker = [], d = 0)
+def build_tree(start, final, tracker = [])
   p "start: #{start}"
   tracker << start
+
   node = Node.new(start)
   
   legal_moves = find_legal_coordinates(start)
+
+  
   tracker << final if legal_moves.include?(final)
   return p "LEGAL TARGET FOUND #{tracker} / steps needed: #{tracker.length - 1}" if legal_moves.include?(final)
-
+  puts "legal before: #{legal_moves}"
   tracker.each { |visited| legal_moves.delete(visited) } unless tracker.empty?
-  legal_moves = legal_moves.reverse if d = 1
+  puts "legal after: #{legal_moves}"
+
   if legal_moves.empty?
     p 'out of legal moves'
-    node.c_1 = build_tree(tracker[1], final, tracker = [], d = 1)
+    return
   else
     node.c_1 = build_tree(legal_moves[0], final, tracker) unless legal_moves[0].nil?
+    #node.c_1 = build_tree(legal_moves[-2], final, tracker) unless legal_moves[-2].nil?
   end
 
   start
@@ -206,9 +211,7 @@ def build_tree_8(start, final, tracker = [])
   legal_moves = find_legal_coordinates(start)
   tracker << final if legal_moves.include?(final)
   return p "LEGAL TARGET FOUND #{tracker} / steps needed: #{tracker.length - 1}" if legal_moves.include?(final)
-
   tracker.each { |visited| legal_moves.delete(visited) } unless tracker.empty?
-
   if legal_moves.empty?
     p 'out of legal moves'
     return
@@ -258,4 +261,4 @@ def knight_moves(start, final)
   puts "Your path is: #{results[0]} and you need #{results[0].length - 1} steps"
 end
 
-knight_moves([0, 0], [0, 6])
+knight_moves([0, 0], [7, 7])
